@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             xmlns:ctrl="clr-namespace:GiantGroupOpsPlus.Views.Controls"
+             x:Class="GiantGroupOpsPlus.Views.ClientEditPage"
+             x:DataType="vm:ClientEditViewModel"
+             Title="{Binding PageTitle}">
+    <Grid RowDefinitions="Auto,*">
+        <ctrl:BannerView Grid.Row="0" />
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,12,16,32" Spacing="12">
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+                <Label Text="First name" FontFamily="OpenSansSemibold" FontSize="13" />
+                <Border Padding="12,0"><Entry Text="{Binding FirstName}" Placeholder="First name" MaxLength="60" /></Border>
+                <Label Text="Surname" FontFamily="OpenSansSemibold" FontSize="13" />
+                <Border Padding="12,0"><Entry Text="{Binding Surname}" Placeholder="Surname" MaxLength="60" /></Border>
+                <Label Text="Client type" FontFamily="OpenSansSemibold" FontSize="13" />
+                <Border Padding="12,0"><Picker ItemsSource="{Binding Types}" SelectedItem="{Binding ClientType}" /></Border>
+                <Label Text="Phone" FontFamily="OpenSansSemibold" FontSize="13" />
+                <Border Padding="12,0"><Entry Text="{Binding Phone}" Placeholder="082 123 4567" Keyboard="Telephone" MaxLength="20" /></Border>
+                <Label Text="Email" FontFamily="OpenSansSemibold" FontSize="13" />
+                <Border Padding="12,0"><Entry Text="{Binding Email}" Placeholder="name@example.com" Keyboard="Email" MaxLength="100" /></Border>
+                <Button Text="Save client" Command="{Binding SaveCommand}" IsEnabled="{Binding IsNotBusy}" Margin="0,8,0,0" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

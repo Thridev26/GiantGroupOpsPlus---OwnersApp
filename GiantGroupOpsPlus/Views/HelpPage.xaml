@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             x:Class="GiantGroupOpsPlus.Views.HelpPage"
+             x:DataType="vm:HelpViewModel"
+             Title="Help &amp; company">
+    <ScrollView>
+        <VerticalStackLayout Padding="16,12,16,32" Spacing="14">
+            <Border Padding="16" BackgroundColor="{StaticResource PrimaryLight}" Stroke="{StaticResource Primary}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="The Giant Group" Style="{StaticResource Title2}" TextColor="{StaticResource PrimaryDark}" />
+                    <Label Text="Professional tree felling &amp; garden services in KZN. Fully insured and certified." TextColor="{StaticResource PrimaryDark}" />
+                    <Label Text="Mon–Sat · 7:00 AM – 5:00 PM" TextColor="{StaticResource PrimaryDark}" FontSize="13" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="GET IN TOUCH" Style="{StaticResource SectionLabel}" />
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+                <Button Text="📞 Call 0848 331 373" Command="{Binding CallCommand}" FontSize="13" Padding="4,0" />
+                <Button Grid.Column="1" Text="💬 WhatsApp" Command="{Binding WhatsAppCommand}" Style="{StaticResource OutlineButton}" FontSize="13" Padding="4,0" />
+                <Button Grid.Row="1" Text="📷 Instagram" Command="{Binding InstagramCommand}" Style="{StaticResource OutlineButton}" FontSize="13" Padding="4,0" />
+                <Button Grid.Row="1" Grid.Column="1" Text="🌐 Website" Command="{Binding WebsiteCommand}" Style="{StaticResource OutlineButton}" FontSize="13" Padding="4,0" />
+            </Grid>
+
+            <Label Text="QUICK ANSWERS" Style="{StaticResource SectionLabel}" Margin="0,8,0,0" />
+            <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Faq}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:FaqItem">
+                        <Border Padding="14">
+                            <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding ToggleCommand}" /></Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="8">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="{Binding Question}" FontFamily="OpenSansSemibold" />
+                                    <Label Grid.Column="1" Text="{Binding Arrow}" FontSize="18" TextColor="{StaticResource Primary}" />
+                                </Grid>
+                                <Label Text="{Binding Answer}" Style="{StaticResource Muted}" FontSize="13.5" IsVisible="{Binding IsOpen}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

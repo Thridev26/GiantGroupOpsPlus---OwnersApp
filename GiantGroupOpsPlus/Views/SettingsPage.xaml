@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             xmlns:ctrl="clr-namespace:GiantGroupOpsPlus.Views.Controls"
+             x:Class="GiantGroupOpsPlus.Views.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="More">
+    <Grid RowDefinitions="Auto,*">
+        <ctrl:BannerView Grid.Row="0" />
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,12,16,32" Spacing="14">
+
+                <Border Padding="16">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="{Binding UserName}" Style="{StaticResource Title2}" />
+                        <Label Text="{Binding RoleText}" Style="{StaticResource Muted}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Label Text="BUSINESS" Style="{StaticResource SectionLabel}" Margin="4,6,0,0" />
+                <Border Padding="0">
+                    <VerticalStackLayout>
+                        <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14" ColumnSpacing="12">
+                            <Label Text="＋" FontSize="18" TextColor="{StaticResource Primary}" /><Label Grid.Column="1" Text="New job request" FontFamily="OpenSansSemibold" /><Label Grid.Column="2" Text="›" Style="{StaticResource Muted}" FontSize="18" />
+                            <Grid.GestureRecognizers><TapGestureRecognizer Command="{Binding NewRequestCommand}" /></Grid.GestureRecognizers>
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="{StaticResource PrimaryLight}" />
+                        <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14" ColumnSpacing="12">
+                            <Label Text="📄" FontSize="16" /><Label Grid.Column="1" Text="Quotations" FontFamily="OpenSansSemibold" /><Label Grid.Column="2" Text="›" Style="{StaticResource Muted}" FontSize="18" />
+                            <Grid.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenSectionCommand}" CommandParameter="quotes" /></Grid.GestureRecognizers>
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="{StaticResource PrimaryLight}" />
+                        <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14" ColumnSpacing="12">
+                            <Label Text="👥" FontSize="16" /><Label Grid.Column="1" Text="Clients" FontFamily="OpenSansSemibold" /><Label Grid.Column="2" Text="›" Style="{StaticResource Muted}" FontSize="18" />
+                            <Grid.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenSectionCommand}" CommandParameter="clients" /></Grid.GestureRecognizers>
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="{StaticResource PrimaryLight}" />
+                        <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14" ColumnSpacing="12">
+                            <Label Text="🗓" FontSize="16" /><Label Grid.Column="1" Text="Staff &amp; equipment allocation" FontFamily="OpenSansSemibold" /><Label Grid.Column="2" Text="›" Style="{StaticResource Muted}" FontSize="18" />
+                            <Grid.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenSectionCommand}" CommandParameter="allocations" /></Grid.GestureRecognizers>
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="{StaticResource PrimaryLight}" />
+                        <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14" ColumnSpacing="12">
+                            <Label Text="💳" FontSize="16" /><Label Grid.Column="1" Text="Invoicing &amp; payments" FontFamily="OpenSansSemibold" /><Label Grid.Column="2" Text="›" Style="{StaticResource Muted}" FontSize="18" />
+                            <Grid.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenSectionCommand}" CommandParameter="payments" /></Grid.GestureRecognizers>
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="{StaticResource PrimaryLight}" />
+                        <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14" ColumnSpacing="12">
+                            <Label Text="📊" FontSize="16" /><Label Grid.Column="1" Text="Reports" FontFamily="OpenSansSemibold" /><Label Grid.Column="2" Text="›" Style="{StaticResource Muted}" FontSize="18" />
+                            <Grid.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenSectionCommand}" CommandParameter="reports" /></Grid.GestureRecognizers>
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="{StaticResource PrimaryLight}" />
+                        <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14" ColumnSpacing="12">
+                            <Label Text="❓" FontSize="16" /><Label Grid.Column="1" Text="Help &amp; company info" FontFamily="OpenSansSemibold" /><Label Grid.Column="2" Text="›" Style="{StaticResource Muted}" FontSize="18" />
+                            <Grid.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenSectionCommand}" CommandParameter="help" /></Grid.GestureRecognizers>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Label Text="PHOTOS" Style="{StaticResource SectionLabel}" Margin="4,6,0,0" />
+                <Border Padding="16">
+                    <VerticalStackLayout Spacing="14">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout>
+                                <Label Text="Upload queue" FontFamily="OpenSansSemibold" />
+                                <Label Text="{Binding QueueText}" Style="{StaticResource Muted}" />
+                            </VerticalStackLayout>
+                            <Button Grid.Column="1" Text="Open" Command="{Binding OpenQueueCommand}" Style="{StaticResource OutlineButton}" MinimumHeightRequest="38" Padding="16,0" />
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout>
+                                <Label Text="Upload on Wi-Fi only" FontFamily="OpenSansSemibold" />
+                                <Label Text="Saves mobile data. Photos wait until Wi-Fi is available." Style="{StaticResource Muted}" />
+                            </VerticalStackLayout>
+                            <Switch Grid.Column="1" IsToggled="{Binding WifiOnly}" VerticalOptions="Center" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Label Text="CONNECTION" Style="{StaticResource SectionLabel}" Margin="4,6,0,0" />
+                <Border Padding="16">
+                    <VerticalStackLayout Spacing="14">
+                        <VerticalStackLayout>
+                            <Label Text="Server" FontFamily="OpenSansSemibold" />
+                            <Label Text="{Binding ServerText}" Style="{StaticResource Muted}" LineBreakMode="MiddleTruncation" />
+                        </VerticalStackLayout>
+                        <Button Text="Test connection" Command="{Binding TestConnectionCommand}" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource OutlineButton}" />
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout>
+                                <Label Text="Demo mode" FontFamily="OpenSansSemibold" />
+                                <Label Text="Practice with sample data – nothing is sent to the server." Style="{StaticResource Muted}" />
+                            </VerticalStackLayout>
+                            <Switch Grid.Column="1" IsToggled="{Binding DemoMode}" VerticalOptions="Center" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Label Text="{Binding VersionText}" Style="{StaticResource Muted}" HorizontalTextAlignment="Center" FontSize="11" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

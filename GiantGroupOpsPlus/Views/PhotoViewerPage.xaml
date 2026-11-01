@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             xmlns:ctrl="clr-namespace:GiantGroupOpsPlus.Views.Controls"
+             x:Class="GiantGroupOpsPlus.Views.PhotoViewerPage"
+             x:DataType="vm:PhotoViewerViewModel"
+             Title="Photo"
+             BackgroundColor="Black">
+    <Grid RowDefinitions="Auto,*,Auto">
+        <ctrl:BannerView Grid.Row="0" />
+        <Image Grid.Row="1" Source="{Binding Image}" Aspect="AspectFit" />
+        <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsLoadingImage}" IsVisible="{Binding IsLoadingImage}" Color="White"
+                           VerticalOptions="Center" HorizontalOptions="Center" />
+        <Label Grid.Row="1" Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" TextColor="White" Margin="32"
+               HorizontalTextAlignment="Center" VerticalOptions="Center" />
+
+        <VerticalStackLayout Grid.Row="2" Padding="16,12,16,20" Spacing="10" BackgroundColor="#E6101412">
+            <HorizontalStackLayout Spacing="10">
+                <ctrl:StatusChip Status="{Binding PhotoType}" />
+                <Label Text="{Binding Caption}" TextColor="#D0FFFFFF" FontSize="13" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button Text="Switch Before / After" Command="{Binding ToggleTypeCommand}" IsEnabled="{Binding IsNotBusy}"
+                        BackgroundColor="Transparent" BorderColor="White" BorderWidth="1.5" TextColor="White" FontSize="13" />
+                <Button Grid.Column="1" Text="Delete" Command="{Binding DeleteCommand}" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource DangerButton}" />
+            </Grid>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

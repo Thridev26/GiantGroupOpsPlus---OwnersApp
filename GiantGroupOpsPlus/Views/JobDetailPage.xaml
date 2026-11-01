@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             xmlns:models="clr-namespace:GiantGroupOpsPlus.Models"
+             xmlns:ctrl="clr-namespace:GiantGroupOpsPlus.Views.Controls"
+             x:Class="GiantGroupOpsPlus.Views.JobDetailPage"
+             x:DataType="vm:JobDetailViewModel"
+             Title="Job">
+    <Grid RowDefinitions="Auto,*">
+        <ctrl:BannerView Grid.Row="0" />
+        <RefreshView Grid.Row="1" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <ScrollView>
+                <VerticalStackLayout Padding="16,12,16,32" Spacing="14">
+
+                    <VerticalStackLayout IsVisible="{Binding HasError}" Spacing="10">
+                        <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}" />
+                        <Button Text="Try again" Command="{Binding RetryCommand}" Style="{StaticResource OutlineButton}" />
+                    </VerticalStackLayout>
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+                    <VerticalStackLayout Spacing="14" IsVisible="{Binding HasDetail}">
+
+                        <!-- Summary -->
+                        <Border Padding="16">
+                            <VerticalStackLayout Spacing="8">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="{Binding Detail.JobId, StringFormat='Job #{0}'}" Style="{StaticResource Title2}" />
+                                    <ctrl:StatusChip Grid.Column="1" Status="{Binding Detail.Status}" />
+                                </Grid>
+                                <Label Text="{Binding Detail.ClientName}" FontFamily="OpenSansSemibold" FontSize="16" />
+                                <Label Text="{Binding Detail.SiteAddress}" Style="{StaticResource Muted}" />
+                                <Label Text="{Binding Detail.ItemsText}" FontSize="13.5" />
+                                <Label Text="{Binding Detail.StartText}" TextColor="{StaticResource Info}" FontSize="13" />
+                                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="0,6,0,0">
+                                    <Button Grid.Column="0" Text="📞 Call" Style="{StaticResource OutlineButton}" Command="{Binding CallCommand}" FontSize="13" Padding="4,0" />
+                                    <Button Grid.Column="1" Text="📍 Directions" Style="{StaticResource OutlineButton}" Command="{Binding DirectionsCommand}" FontSize="13" Padding="4,0" />
+                                    <Button Grid.Column="2" Text="Request" Style="{StaticResource OutlineButton}" Command="{Binding OpenRequestCommand}" FontSize="13" Padding="4,0" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Status -->
+                        <Border Padding="16">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="UPDATE JOB STATUS" Style="{StaticResource SectionLabel}" />
+                                <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                                    <HorizontalStackLayout BindableLayout.ItemsSource="{Binding StatusOptions}"
+                                                           BindableLayout.ItemTemplate="{StaticResource FilterChipTemplate}" />
+                                </ScrollView>
+                                <Label Text="Tap a status to change it. You'll be asked to confirm." Style="{StaticResource Muted}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Photos -->
+                        <Border Padding="16">
+                            <VerticalStackLayout Spacing="10">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="SITE PHOTOS" Style="{StaticResource SectionLabel}" VerticalOptions="Center" />
+                                    <Label Grid.Column="1" Text="{Binding Detail.PhotoText}" Style="{StaticResource Muted}" />
+                                </Grid>
+                                <Label Text="{Binding QueuedText}" IsVisible="{Binding HasQueued}" TextColor="{StaticResource Info}" FontSize="13" />
+                                <Button Text="📷  Take or add photos" Command="{Binding AddPhotoCommand}" />
+                                <Button Text="View all photos" Command="{Binding ViewPhotosCommand}" Style="{StaticResource OutlineButton}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Costs -->
+                        <Border Padding="16">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="JOB COSTS (ZAR)" Style="{StaticResource SectionLabel}" />
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="12" RowDefinitions="Auto,Auto">
+                                    <Label Text="Fuel" FontSize="13" FontFamily="OpenSansSemibold" />
+                                    <Label Grid.Column="1" Text="Dumping" FontSize="13" FontFamily="OpenSansSemibold" />
+                                    <Border Grid.Row="1" Padding="12,0"><Entry Text="{Binding FuelText}" Keyboard="Numeric" Placeholder="0.00" /></Border>
+                                    <Border Grid.Row="1" Grid.Column="1" Padding="12,0"><Entry Text="{Binding DumpingText}" Keyboard="Numeric" Placeholder="0.00" /></Border>
+                                </Grid>
+                                <Label Text="{Binding TotalCostText, StringFormat='Total incl. labour: {0}'}" Style="{StaticResource Muted}" />
+                                <Button Text="Save costs" Command="{Binding SaveCostsCommand}" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource OutlineButton}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Crew -->
+                        <Border Padding="16" IsVisible="{Binding ShowLegacyCrew}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="CREW" Style="{StaticResource SectionLabel}" />
+                                <VerticalStackLayout Spacing="6" BindableLayout.ItemsSource="{Binding Staff}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="models:StaffAssignment">
+                                            <Grid ColumnDefinitions="*,Auto">
+                                                <Label Text="{Binding Name}" />
+                                                <Label Grid.Column="1" Text="{Binding HoursText}" Style="{StaticResource Muted}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Crew & equipment (full app) -->
+                        <Border Padding="16" IsVisible="{Binding HasAllocApi}">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="CREW" Style="{StaticResource SectionLabel}" />
+                                <Label Text="No staff assigned yet." Style="{StaticResource Muted}" IsVisible="{Binding HasCrewAlloc, Converter={StaticResource InvertedBool}}" />
+                                <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding CrewAlloc}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="models:JobStaffAlloc">
+                                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                                <Label Text="{Binding Name}" FontFamily="OpenSansSemibold" />
+                                                <Label Grid.Row="1" Text="{Binding WhenText}" Style="{StaticResource Muted}" />
+                                                <Button Grid.Column="1" Grid.RowSpan="2" Text="Remove" Style="{StaticResource TextButton}" TextColor="{StaticResource Danger}" MinimumHeightRequest="36" Padding="8,0" Clicked="OnRemoveStaff" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                                <Button Text="＋ Assign staff" Command="{Binding AssignStaffCommand}" Style="{StaticResource OutlineButton}" />
+
+                                <BoxView HeightRequest="1" Color="{StaticResource PrimaryLight}" Margin="0,6" />
+                                <Label Text="EQUIPMENT" Style="{StaticResource SectionLabel}" />
+                                <Label Text="No equipment assigned yet." Style="{StaticResource Muted}" IsVisible="{Binding HasAssetAlloc, Converter={StaticResource InvertedBool}}" />
+                                <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding AssetAlloc}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="models:JobAssetAlloc">
+                                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                                <Label Text="{Binding NameText}" FontFamily="OpenSansSemibold" LineBreakMode="TailTruncation" />
+                                                <Label Grid.Row="1" Text="{Binding WhenText}" Style="{StaticResource Muted}" />
+                                                <Button Grid.Column="1" Grid.RowSpan="2" Text="Remove" Style="{StaticResource TextButton}" TextColor="{StaticResource Danger}" MinimumHeightRequest="36" Padding="8,0" Clicked="OnRemoveAsset" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                                <Button Text="＋ Assign equipment" Command="{Binding AssignAssetCommand}" Style="{StaticResource OutlineButton}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Billing (full app) -->
+                        <Border Padding="16">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="BILLING" Style="{StaticResource SectionLabel}" />
+                                <Button Text="View quotation" Command="{Binding OpenQuoteCommand}" IsVisible="{Binding HasQuote}" Style="{StaticResource OutlineButton}" />
+                                <Button Text="Payments &amp; balance" Command="{Binding OpenPaymentsCommand}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

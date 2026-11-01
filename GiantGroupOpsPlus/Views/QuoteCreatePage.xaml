@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             xmlns:models="clr-namespace:GiantGroupOpsPlus.Models"
+             xmlns:ctrl="clr-namespace:GiantGroupOpsPlus.Views.Controls"
+             x:Class="GiantGroupOpsPlus.Views.QuoteCreatePage"
+             x:DataType="vm:QuoteCreateViewModel"
+             Title="New quotation">
+    <Grid RowDefinitions="Auto,*">
+        <ctrl:BannerView Grid.Row="0" />
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,12,16,32" Spacing="14">
+                <VerticalStackLayout IsVisible="{Binding HasError}" Spacing="10">
+                    <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}" />
+                    <Button Text="Try again" Command="{Binding RetryCommand}" Style="{StaticResource OutlineButton}" />
+                </VerticalStackLayout>
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+                <VerticalStackLayout Spacing="14" IsVisible="{Binding HasPreview}">
+                    <Border Padding="16">
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="{Binding Preview.RequestId, StringFormat='Request #{0}'}" Style="{StaticResource Title2}" />
+                            <Label Text="{Binding Preview.ClientName}" FontFamily="OpenSansSemibold" />
+                            <Label Text="{Binding Preview.SiteAddress}" Style="{StaticResource Muted}" />
+                            <ctrl:StatusChip Status="{Binding Preview.RequestStatus}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Padding="16" IsVisible="{Binding HasBlocker}" Stroke="{StaticResource Warning}">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{Binding Preview.Blocker}" TextColor="{StaticResource Warning}" FontFamily="OpenSansSemibold" />
+                            <Button Text="View existing quote" Command="{Binding ViewExistingCommand}" IsVisible="{Binding HasExisting}" Style="{StaticResource OutlineButton}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Padding="16">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="PRICE BREAKDOWN" Style="{StaticResource SectionLabel}" />
+                            <VerticalStackLayout Spacing="6" BindableLayout.ItemsSource="{Binding Lines}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:QuoteLine">
+                                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                            <Label Text="{Binding Name}" FontFamily="OpenSansSemibold" />
+                                            <Label Grid.Column="1" Text="{Binding TotalText}" />
+                                            <Label Grid.Row="1" Text="{Binding Detail}" Style="{StaticResource Muted}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                            <BoxView HeightRequest="1" Color="{StaticResource PrimaryLight}" />
+                            <Grid ColumnDefinitions="*,Auto"><Label Text="Services" /><Label Grid.Column="1" Text="{Binding ServicesText}" /></Grid>
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <Label Text="Travel" /><Label Grid.Column="1" Text="{Binding TravelText}" />
+                                <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Preview.TravelNote}" Style="{StaticResource Muted}" />
+                            </Grid>
+                            <Grid ColumnDefinitions="*,Auto"><Label Text="Subtotal" /><Label Grid.Column="1" Text="{Binding SubtotalText}" /></Grid>
+                            <Grid ColumnDefinitions="*,Auto"><Label Text="VAT (15%)" /><Label Grid.Column="1" Text="{Binding VatText}" /></Grid>
+                            <BoxView HeightRequest="1" Color="{StaticResource PrimaryLight}" />
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="Total" Style="{StaticResource Title2}" />
+                                <Label Grid.Column="1" Text="{Binding TotalText}" Style="{StaticResource Title2}" TextColor="{StaticResource Primary}" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Button Text="Create and send quote" Command="{Binding CreateCommand}" IsVisible="{Binding CanCreate}" IsEnabled="{Binding IsNotBusy}" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

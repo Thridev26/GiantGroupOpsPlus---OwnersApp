@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             xmlns:models="clr-namespace:GiantGroupOpsPlus.Models"
+             xmlns:ctrl="clr-namespace:GiantGroupOpsPlus.Views.Controls"
+             x:Class="GiantGroupOpsPlus.Views.PaymentsPage"
+             x:DataType="vm:PaymentsViewModel"
+             Title="Invoicing &amp; payments">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
+        <SearchBar Grid.Row="0" Placeholder="Search client, address or job #" Text="{Binding SearchText}" Margin="8,4,8,0" />
+        <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Padding="16,6,8,6">
+            <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Filters}" BindableLayout.ItemTemplate="{StaticResource FilterChipTemplate}" />
+        </ScrollView>
+        <Label Grid.Row="2" Text="{Binding Summary}" Style="{StaticResource Muted}" Margin="20,0,16,4" />
+        <ctrl:BannerView Grid.Row="3" />
+        <RefreshView Grid.Row="4" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <CollectionView ItemsSource="{Binding Jobs}" SelectionMode="Single" SelectionChanged="OnSelected" Margin="16,0">
+                <CollectionView.ItemsLayout><LinearItemsLayout Orientation="Vertical" ItemSpacing="10" /></CollectionView.ItemsLayout>
+                <CollectionView.Header><BoxView HeightRequest="2" Color="Transparent" /></CollectionView.Header>
+                <CollectionView.Footer><BoxView HeightRequest="24" Color="Transparent" /></CollectionView.Footer>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:PaymentJob">
+                        <Border Padding="14">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
+                                <Label Grid.Row="0" Text="{Binding Title}" FontFamily="OpenSansSemibold" FontSize="15" LineBreakMode="TailTruncation" />
+                                <ctrl:StatusChip Grid.Row="0" Grid.Column="1" Status="{Binding BalanceStatus}" />
+                                <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding SiteAddress}" Style="{StaticResource Muted}" LineBreakMode="TailTruncation" />
+                                <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="14">
+                                    <Label Text="{Binding InvoiceText}" FontSize="12.5" />
+                                    <Label Text="{Binding PaidText}" FontSize="12.5" TextColor="{StaticResource Success}" />
+                                    <Label Text="{Binding BalanceText}" FontSize="12.5" FontFamily="OpenSansSemibold" TextColor="{StaticResource Warning}" />
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+        <ActivityIndicator Grid.Row="4" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center" />
+        <Label Grid.Row="4" Text="No jobs match." Style="{StaticResource Muted}" IsVisible="{Binding IsEmpty}" HorizontalOptions="Center" VerticalOptions="Center" />
+        <VerticalStackLayout Grid.Row="4" IsVisible="{Binding HasError}" Padding="24" Spacing="12" VerticalOptions="Center">
+            <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}" HorizontalTextAlignment="Center" />
+            <Button Text="Try again" Command="{Binding RetryCommand}" Style="{StaticResource OutlineButton}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

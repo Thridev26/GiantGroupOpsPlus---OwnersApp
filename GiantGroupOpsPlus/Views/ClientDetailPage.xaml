@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             xmlns:models="clr-namespace:GiantGroupOpsPlus.Models"
+             xmlns:ctrl="clr-namespace:GiantGroupOpsPlus.Views.Controls"
+             x:Class="GiantGroupOpsPlus.Views.ClientDetailPage"
+             x:DataType="vm:ClientDetailViewModel"
+             Title="Client">
+    <Grid RowDefinitions="Auto,*">
+        <ctrl:BannerView Grid.Row="0" />
+        <RefreshView Grid.Row="1" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <ScrollView>
+                <VerticalStackLayout Padding="16,12,16,32" Spacing="14">
+                    <VerticalStackLayout IsVisible="{Binding HasError}" Spacing="10">
+                        <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}" />
+                        <Button Text="Try again" Command="{Binding RetryCommand}" Style="{StaticResource OutlineButton}" />
+                    </VerticalStackLayout>
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+                    <VerticalStackLayout Spacing="14" IsVisible="{Binding HasDetail}">
+                        <Border Padding="16">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="{Binding Detail.FullName}" Style="{StaticResource Title2}" />
+                                <Label Text="{Binding Detail.TypeText}" Style="{StaticResource Muted}" />
+                                <Label Text="{Binding Detail.Phone}" />
+                                <Label Text="{Binding Detail.Email}" />
+                                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="0,6,0,0">
+                                    <Button Grid.Column="0" Text="📞 Call" Style="{StaticResource OutlineButton}" Command="{Binding CallCommand}" FontSize="13" Padding="4,0" />
+                                    <Button Grid.Column="1" Text="✉ Email" Style="{StaticResource OutlineButton}" Command="{Binding EmailCommand}" FontSize="13" Padding="4,0" />
+                                    <Button Grid.Column="2" Text="✎ Edit" Style="{StaticResource OutlineButton}" Command="{Binding EditCommand}" FontSize="13" Padding="4,0" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Button Text="＋ New job request for this client" Command="{Binding NewRequestCommand}" />
+                        <Border Padding="16">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="JOB REQUESTS" Style="{StaticResource SectionLabel}" />
+                                <Label Text="No requests yet." Style="{StaticResource Muted}" IsVisible="{Binding HasRequests, Converter={StaticResource InvertedBool}}" />
+                                <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Requests}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="models:ClientRequestRef">
+                                            <Grid ColumnDefinitions="*,Auto">
+                                                <Label Text="{Binding Text}" LineBreakMode="TailTruncation" VerticalOptions="Center" />
+                                                <ctrl:StatusChip Grid.Column="1" Status="{Binding Status}" />
+                                                <Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnRequestTapped" /></Grid.GestureRecognizers>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

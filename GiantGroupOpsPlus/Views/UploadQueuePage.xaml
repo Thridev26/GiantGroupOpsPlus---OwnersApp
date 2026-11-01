@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             x:Class="GiantGroupOpsPlus.Views.UploadQueuePage"
+             x:DataType="vm:UploadQueueViewModel"
+             Title="Photo uploads">
+    <Grid RowDefinitions="Auto,*">
+        <Button Grid.Row="0" Text="Retry failed uploads" Command="{Binding RetryAllCommand}" IsVisible="{Binding HasFailed}" Margin="16,12,16,4" />
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Items}" SelectionMode="None" Margin="16,8">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:QueueItemViewModel">
+                    <Border Padding="10">
+                        <Grid ColumnDefinitions="64,*,Auto" ColumnSpacing="12">
+                            <Border StrokeThickness="0" HeightRequest="64" WidthRequest="64" Padding="0">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                                <Image Source="{Binding Image}" Aspect="AspectFill" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="{Binding Title}" FontFamily="OpenSansSemibold" />
+                                <Label Text="{Binding StateText}" FontSize="12.5" LineBreakMode="WordWrap"
+                                       TextColor="{Binding StateColorKey, Converter={StaticResource StatusToColor}}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2" Spacing="4" VerticalOptions="Center">
+                                <Button Text="Retry" Command="{Binding RetryCommand}" IsVisible="{Binding CanRetry}" MinimumHeightRequest="36" FontSize="12" Padding="12,0" />
+                                <Button Text="Remove" Command="{Binding DiscardCommand}" Style="{StaticResource OutlineButton}" MinimumHeightRequest="36" FontSize="12" Padding="12,0" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <VerticalStackLayout Grid.Row="1" IsVisible="{Binding IsEmpty}" VerticalOptions="Center" Spacing="6" Padding="32">
+            <Label Text="✅" FontSize="42" HorizontalOptions="Center" />
+            <Label Text="All photos are uploaded" Style="{StaticResource Title2}" HorizontalOptions="Center" />
+            <Label Text="New photos appear here until they reach the server." Style="{StaticResource Muted}" HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

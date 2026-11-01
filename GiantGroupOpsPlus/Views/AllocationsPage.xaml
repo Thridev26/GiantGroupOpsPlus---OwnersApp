@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             xmlns:models="clr-namespace:GiantGroupOpsPlus.Models"
+             xmlns:ctrl="clr-namespace:GiantGroupOpsPlus.Views.Controls"
+             x:Class="GiantGroupOpsPlus.Views.AllocationsPage"
+             x:DataType="vm:AllocationsViewModel"
+             Title="Allocation">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
+        <SearchBar Grid.Row="0" Placeholder="Search name, client, address or job #" Text="{Binding SearchText}" Margin="8,4,8,0" />
+        <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Padding="16,6,8,6">
+            <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Modes}" BindableLayout.ItemTemplate="{StaticResource FilterChipTemplate}" />
+        </ScrollView>
+        <Label Grid.Row="2" Text="{Binding Summary}" Style="{StaticResource Muted}" Margin="20,0,16,4" />
+        <ctrl:BannerView Grid.Row="3" />
+        <RefreshView Grid.Row="4" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <ScrollView>
+                <VerticalStackLayout Padding="16,0,16,24" Spacing="10">
+                    <VerticalStackLayout Spacing="10" IsVisible="{Binding IsStaffMode}" BindableLayout.ItemsSource="{Binding StaffItems}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:StaffAllocation">
+                                <Border Padding="14">
+                                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnStaffTapped" /></Border.GestureRecognizers>
+                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="3">
+                                        <Label Text="{Binding StaffName}" FontFamily="OpenSansSemibold" />
+                                        <ctrl:StatusChip Grid.Column="1" Status="{Binding JobStatus}" />
+                                        <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding JobText}" LineBreakMode="TailTruncation" />
+                                        <Label Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding WhenText}" TextColor="{StaticResource Info}" FontSize="12.5" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="10" IsVisible="{Binding IsAssetMode}" BindableLayout.ItemsSource="{Binding AssetItems}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:AssetAllocation">
+                                <Border Padding="14">
+                                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAssetTapped" /></Border.GestureRecognizers>
+                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="3">
+                                        <Label Text="{Binding AssetName}" FontFamily="OpenSansSemibold" LineBreakMode="TailTruncation" />
+                                        <Label Grid.Column="1" Text="{Binding AssetSource}" Style="{StaticResource Muted}" />
+                                        <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding JobText}" LineBreakMode="TailTruncation" />
+                                        <Label Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding WhenText}" TextColor="{StaticResource Info}" FontSize="12.5" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                    <Label Text="Nothing booked." Style="{StaticResource Muted}" IsVisible="{Binding IsEmpty}" HorizontalOptions="Center" Margin="0,40,0,0" />
+                    <VerticalStackLayout IsVisible="{Binding HasError}" Spacing="12">
+                        <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}" HorizontalTextAlignment="Center" />
+                        <Button Text="Try again" Command="{Binding RetryCommand}" Style="{StaticResource OutlineButton}" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

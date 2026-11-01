@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             xmlns:models="clr-namespace:GiantGroupOpsPlus.Models"
+             xmlns:ctrl="clr-namespace:GiantGroupOpsPlus.Views.Controls"
+             x:Class="GiantGroupOpsPlus.Views.AssignPage"
+             x:DataType="vm:AssignViewModel"
+             Title="{Binding Title}">
+    <ContentPage.Resources>
+        <DataTemplate x:Key="SlotChipTemplate" x:DataType="vm:SlotChoice">
+            <Border Padding="12,7" Margin="0,0,8,8" StrokeShape="RoundRectangle 18">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                        <Setter Property="Stroke" Value="{StaticResource Primary}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding ToggleCommand}" /></Border.GestureRecognizers>
+                <Label Text="{Binding Label}" FontSize="12.5" FontFamily="OpenSansSemibold">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                            <Setter Property="TextColor" Value="White" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+            </Border>
+        </DataTemplate>
+    </ContentPage.Resources>
+    <Grid RowDefinitions="Auto,*">
+        <ctrl:BannerView Grid.Row="0" />
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,12,16,32" Spacing="12">
+                <VerticalStackLayout IsVisible="{Binding HasError}" Spacing="10">
+                    <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}" />
+                    <Button Text="Try again" Command="{Binding RetryCommand}" Style="{StaticResource OutlineButton}" />
+                </VerticalStackLayout>
+
+                <Label Text="DATE" Style="{StaticResource SectionLabel}" />
+                <Border Padding="12,0"><DatePicker Date="{Binding Date}" /></Border>
+
+                <Label Text="TIME SLOTS" Style="{StaticResource SectionLabel}" Margin="0,6,0,0" />
+                <FlexLayout Wrap="Wrap" BindableLayout.ItemsSource="{Binding Slots}" BindableLayout.ItemTemplate="{StaticResource SlotChipTemplate}" />
+
+                <Label Text="{Binding Hint}" Style="{StaticResource Muted}" />
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+                <VerticalStackLayout Spacing="10" IsVisible="{Binding IsStaffMode}" BindableLayout.ItemsSource="{Binding StaffOptions}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:StaffOption">
+                            <Border Padding="14">
+                                <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnStaffTapped" /></Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="2">
+                                    <Label Text="{Binding Name}" FontFamily="OpenSansSemibold" />
+                                    <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding SubText}" Style="{StaticResource Muted}" />
+                                    <Label Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding StatusText}" FontSize="12.5">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsFree}" Value="True"><Setter Property="TextColor" Value="{StaticResource Success}" /></DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsFree}" Value="False"><Setter Property="TextColor" Value="{StaticResource Warning}" /></DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="10" IsVisible="{Binding IsAssetMode}" BindableLayout.ItemsSource="{Binding AssetOptions}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:AssetOption">
+                            <Border Padding="14">
+                                <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnAssetTapped" /></Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="2">
+                                    <Label Text="{Binding Name}" FontFamily="OpenSansSemibold" />
+                                    <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding SubText}" Style="{StaticResource Muted}" />
+                                    <Label Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding StatusText}" FontSize="12.5">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsFree}" Value="True"><Setter Property="TextColor" Value="{StaticResource Success}" /></DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsFree}" Value="False"><Setter Property="TextColor" Value="{StaticResource Warning}" /></DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="GiantGroupOpsPlus.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:GiantGroupOpsPlus.Views"
+    Shell.FlyoutBehavior="Disabled"
+    Title="Giant Group Ops Plus">
+
+    <TabBar>
+        <ShellContent Title="Home" Icon="tab_home.png" Route="dashboard" ContentTemplate="{DataTemplate views:DashboardPage}" />
+        <ShellContent Title="Requests" Icon="tab_requests.png" Route="requests" ContentTemplate="{DataTemplate views:RequestsPage}" />
+        <ShellContent Title="Jobs" Icon="tab_jobs.png" Route="jobs" ContentTemplate="{DataTemplate views:JobsPage}" />
+        <ShellContent Title="Calendar" Icon="tab_calendar.png" Route="calendar" ContentTemplate="{DataTemplate views:CalendarPage}" />
+        <ShellContent Title="More" Icon="tab_more.png" Route="settings" ContentTemplate="{DataTemplate views:SettingsPage}" />
+    </TabBar>
+</Shell>

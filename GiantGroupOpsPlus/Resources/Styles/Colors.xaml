@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Giant Group brand: forest green + earth tones -->
+    <Color x:Key="Primary">#1F6B3A</Color>
+    <Color x:Key="PrimaryDark">#0F3D22</Color>
+    <Color x:Key="PrimaryLight">#D6EADF</Color>
+    <Color x:Key="Accent">#F2A900</Color>
+    <Color x:Key="Secondary">#E2E8E4</Color>
+    <Color x:Key="Tertiary">#0F3D22</Color>
+
+    <Color x:Key="PageBackground">#F6F8F7</Color>
+    <Color x:Key="PageBackgroundDark">#101412</Color>
+    <Color x:Key="CardBackground">#FFFFFF</Color>
+    <Color x:Key="CardBackgroundDark">#1B211E</Color>
+    <Color x:Key="TextPrimary">#16201A</Color>
+    <Color x:Key="TextPrimaryDark">#F1F5F2</Color>
+    <Color x:Key="TextMuted">#5F6F66</Color>
+    <Color x:Key="TextMutedDark">#A5B3AB</Color>
+    <Color x:Key="Border">#DDE5E0</Color>
+    <Color x:Key="BorderDark">#2C3630</Color>
+
+    <Color x:Key="Success">#2E7D32</Color>
+    <Color x:Key="Warning">#E08600</Color>
+    <Color x:Key="Danger">#C62828</Color>
+    <Color x:Key="Info">#1565C0</Color>
+    <Color x:Key="Neutral">#6B7A71</Color>
+
+    <Color x:Key="White">White</Color>
+    <Color x:Key="Black">Black</Color>
+    <Color x:Key="OffBlack">#1f1f1f</Color>
+    <Color x:Key="Gray100">#E1E1E1</Color>
+    <Color x:Key="Gray200">#C8C8C8</Color>
+    <Color x:Key="Gray300">#ACACAC</Color>
+    <Color x:Key="Gray400">#919191</Color>
+    <Color x:Key="Gray500">#6E6E6E</Color>
+    <Color x:Key="Gray600">#404040</Color>
+    <Color x:Key="Gray900">#212121</Color>
+    <Color x:Key="Gray950">#141414</Color>
+
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
+    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}"/>
+    <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}"/>
+</ResourceDictionary>

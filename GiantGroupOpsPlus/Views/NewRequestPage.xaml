@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             xmlns:ctrl="clr-namespace:GiantGroupOpsPlus.Views.Controls"
+             x:Class="GiantGroupOpsPlus.Views.NewRequestPage"
+             x:DataType="vm:NewRequestViewModel"
+             Title="New job request">
+    <Grid RowDefinitions="Auto,*">
+        <ctrl:BannerView Grid.Row="0" />
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,12,16,32" Spacing="12">
+                <VerticalStackLayout IsVisible="{Binding HasError}" Spacing="10">
+                    <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}" />
+                    <Button Text="Try again" Command="{Binding RetryCommand}" Style="{StaticResource OutlineButton}" />
+                </VerticalStackLayout>
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+                <Label Text="CLIENT" Style="{StaticResource SectionLabel}" />
+                <Border Padding="12,0">
+                    <Picker ItemsSource="{Binding Clients}" SelectedItem="{Binding SelectedClient}"
+                            Title="Choose a client" IsEnabled="{Binding ClientLocked, Converter={StaticResource InvertedBool}}" />
+                </Border>
+
+                <Label Text="SITE ADDRESS" Style="{StaticResource SectionLabel}" Margin="0,8,0,0" />
+                <Border Padding="12,0"><Entry Text="{Binding Address}" Placeholder="e.g. 14 Jacaranda Rd, Kloof" MaxLength="100" /></Border>
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                    <Button Grid.Column="0" Text="📍 Use my location" Command="{Binding UseMyLocationCommand}" Style="{StaticResource OutlineButton}" FontSize="13" Padding="4,0" />
+                    <Button Grid.Column="1" Text="🔎 Find address" Command="{Binding FindAddressCommand}" Style="{StaticResource OutlineButton}" FontSize="13" Padding="4,0" />
+                </Grid>
+                <Border Padding="12,0"><Entry Text="{Binding CoordinatesText}" Placeholder="Coordinates: -29.85, 31.02" Keyboard="Text" /></Border>
+                <Label Text="{Binding LocationStatus}" Style="{StaticResource Muted}" />
+
+                <Label Text="SERVICES NEEDED" Style="{StaticResource SectionLabel}" Margin="0,8,0,0" />
+                <Border Padding="14,8">
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Services}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ServiceChoice">
+                                <HorizontalStackLayout Spacing="8">
+                                    <CheckBox IsChecked="{Binding IsSelected}" Color="{StaticResource Primary}" VerticalOptions="Center" />
+                                    <Label Text="{Binding Name}" VerticalOptions="Center" />
+                                </HorizontalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Label Text="URGENCY" Style="{StaticResource SectionLabel}" Margin="0,8,0,0" />
+                <Border Padding="12,0"><Picker ItemsSource="{Binding Urgencies}" SelectedItem="{Binding Urgency}" /></Border>
+
+                <Button Text="Submit request" Command="{Binding SubmitCommand}" IsEnabled="{Binding IsNotBusy}" Margin="0,12,0,0" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

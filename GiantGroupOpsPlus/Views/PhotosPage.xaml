@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             xmlns:ctrl="clr-namespace:GiantGroupOpsPlus.Views.Controls"
+             x:Class="GiantGroupOpsPlus.Views.PhotosPage"
+             x:DataType="vm:PhotosViewModel"
+             Title="{Binding Title}">
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+        <ScrollView Grid.Row="0" Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Padding="16,8,8,4">
+            <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Filters}"
+                                   BindableLayout.ItemTemplate="{StaticResource FilterChipTemplate}" />
+        </ScrollView>
+        <Label Grid.Row="1" Text="{Binding CountsText}" Style="{StaticResource Muted}" Margin="20,0,16,4" />
+        <ctrl:BannerView Grid.Row="2" />
+
+        <RefreshView Grid.Row="3" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <CollectionView ItemsSource="{Binding Photos}" SelectionMode="Single" SelectionChanged="OnSelected" Margin="12,0">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="3" VerticalItemSpacing="6" HorizontalItemSpacing="6" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.Footer><BoxView HeightRequest="96" Color="Transparent" /></CollectionView.Footer>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:PhotoItem">
+                        <Border Padding="0" HeightRequest="118" StrokeThickness="0" BackgroundColor="{StaticResource PrimaryLight}">
+                            <Border.StrokeShape><RoundRectangle CornerRadius="10" /></Border.StrokeShape>
+                            <Grid>
+                                <Label Text="🌳" FontSize="30" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding ShowPlaceholder}" />
+                                <Image Source="{Binding Image}" Aspect="AspectFill" IsVisible="{Binding HasImage}" />
+                                <Border VerticalOptions="End" HorizontalOptions="Start" Margin="6" Padding="7,2" StrokeThickness="0"
+                                        BackgroundColor="#CC000000">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                                    <Label Text="{Binding PhotoType}" TextColor="White" FontSize="10" FontFamily="OpenSansSemibold" />
+                                </Border>
+                                <Border VerticalOptions="Start" HorizontalOptions="Fill" Padding="6,3" StrokeThickness="0" BackgroundColor="#CC1565C0"
+                                        IsVisible="{Binding IsQueued}">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsFailed}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="#CCC62828" />
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Label Text="{Binding QueueText}" TextColor="White" FontSize="10.5" HorizontalTextAlignment="Center" />
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <ActivityIndicator Grid.Row="3" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center" />
+        <VerticalStackLayout Grid.Row="3" IsVisible="{Binding IsEmpty}" VerticalOptions="Center" Spacing="6" Padding="32">
+            <Label Text="📷" FontSize="42" HorizontalOptions="Center" />
+            <Label Text="No photos yet" Style="{StaticResource Title2}" HorizontalOptions="Center" />
+            <Label Text="Tap “Add photos” to record the site before and after the work." Style="{StaticResource Muted}" HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+        <VerticalStackLayout Grid.Row="3" IsVisible="{Binding HasError}" VerticalOptions="Center" Padding="24" Spacing="12">
+            <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}" HorizontalTextAlignment="Center" />
+            <Button Text="Try again" Command="{Binding RetryCommand}" Style="{StaticResource OutlineButton}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <Button Grid.Row="3" Text="📷  Add photos" Command="{Binding AddCommand}" VerticalOptions="End" HorizontalOptions="Center"
+                Margin="0,0,0,20" Padding="28,0" CornerRadius="28" MinimumHeightRequest="54">
+            <Button.Shadow><Shadow Brush="Black" Opacity="0.3" Radius="12" Offset="0,4" /></Button.Shadow>
+        </Button>
+    </Grid>
+</ContentPage>

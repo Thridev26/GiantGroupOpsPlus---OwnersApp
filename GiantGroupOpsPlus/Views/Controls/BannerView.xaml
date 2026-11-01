@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             x:Class="GiantGroupOpsPlus.Views.Controls.BannerView"
+             x:DataType="vm:BaseViewModel">
+    <Border IsVisible="{Binding HasBanner}"
+            Margin="16,8,16,0" Padding="14,10"
+            StrokeThickness="0"
+            BackgroundColor="{Binding BannerIsError, Converter={StaticResource BannerColor}}">
+        <Label Text="{Binding BannerText}" TextColor="White" FontFamily="OpenSansSemibold" FontSize="13.5" />
+    </Border>
+</ContentView>

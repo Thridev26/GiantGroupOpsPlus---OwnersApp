@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             xmlns:ctrl="clr-namespace:GiantGroupOpsPlus.Views.Controls"
+             x:Class="GiantGroupOpsPlus.Views.ReportsPage"
+             x:DataType="vm:ReportsViewModel"
+             Title="Reports">
+    <ContentPage.Resources>
+        <DataTemplate x:Key="BarTemplate" x:DataType="vm:BarRow">
+            <VerticalStackLayout Spacing="3">
+                <Grid ColumnDefinitions="*,Auto"><Label Text="{Binding Label}" FontSize="13" /><Label Grid.Column="1" Text="{Binding ValueText}" FontSize="13" FontFamily="OpenSansSemibold" /></Grid>
+                <ProgressBar Progress="{Binding Fraction}" ProgressColor="{Binding BarColor}" />
+            </VerticalStackLayout>
+        </DataTemplate>
+    </ContentPage.Resources>
+    <Grid RowDefinitions="Auto,*">
+        <ctrl:BannerView Grid.Row="0" />
+        <RefreshView Grid.Row="1" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <ScrollView>
+                <VerticalStackLayout Padding="16,12,16,32" Spacing="14">
+                    <VerticalStackLayout IsVisible="{Binding HasError}" Spacing="10">
+                        <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}" />
+                        <Button Text="Try again" Command="{Binding RetryCommand}" Style="{StaticResource OutlineButton}" />
+                    </VerticalStackLayout>
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+                    <VerticalStackLayout Spacing="14" IsVisible="{Binding HasData}">
+                        <Label Text="MONEY" Style="{StaticResource SectionLabel}" />
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="10">
+                            <Border Padding="12"><VerticalStackLayout Spacing="2"><Label Text="{Binding Invoiced}" FontSize="18" FontFamily="OpenSansSemibold" /><Label Text="Invoiced" Style="{StaticResource Muted}" /></VerticalStackLayout></Border>
+                            <Border Grid.Column="1" Padding="12"><VerticalStackLayout Spacing="2"><Label Text="{Binding Collected}" FontSize="18" FontFamily="OpenSansSemibold" TextColor="{StaticResource Success}" /><Label Text="Collected" Style="{StaticResource Muted}" /></VerticalStackLayout></Border>
+                            <Border Grid.Row="1" Padding="12"><VerticalStackLayout Spacing="2"><Label Text="{Binding Outstanding}" FontSize="18" FontFamily="OpenSansSemibold" TextColor="{StaticResource Warning}" /><Label Text="Outstanding" Style="{StaticResource Muted}" /></VerticalStackLayout></Border>
+                            <Border Grid.Row="1" Grid.Column="1" Padding="12"><VerticalStackLayout Spacing="2"><Label Text="{Binding Last30}" FontSize="18" FontFamily="OpenSansSemibold" /><Label Text="Collected (30 days)" Style="{StaticResource Muted}" /></VerticalStackLayout></Border>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                            <Border Padding="12"><VerticalStackLayout Spacing="2"><Label Text="{Binding CollectionRate}" FontSize="20" FontFamily="OpenSansSemibold" TextColor="{StaticResource Primary}" /><Label Text="Collected" Style="{StaticResource Muted}" /></VerticalStackLayout></Border>
+                            <Border Grid.Column="1" Padding="12"><VerticalStackLayout Spacing="2"><Label Text="{Binding AcceptRate}" FontSize="20" FontFamily="OpenSansSemibold" TextColor="{StaticResource Info}" /><Label Text="Quotes accepted" Style="{StaticResource Muted}" /></VerticalStackLayout></Border>
+                            <Border Grid.Column="2" Padding="12"><VerticalStackLayout Spacing="2"><Label Text="{Binding Clients}" FontSize="20" FontFamily="OpenSansSemibold" /><Label Text="Clients" Style="{StaticResource Muted}" /></VerticalStackLayout></Border>
+                        </Grid>
+
+                        <Border Padding="16" IsVisible="{Binding HasMonths}"><VerticalStackLayout Spacing="10"><Label Text="PAYMENTS BY MONTH" Style="{StaticResource SectionLabel}" /><VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Months}" BindableLayout.ItemTemplate="{StaticResource BarTemplate}" /></VerticalStackLayout></Border>
+                        <Border Padding="16"><VerticalStackLayout Spacing="10"><Label Text="JOB REQUESTS" Style="{StaticResource SectionLabel}" /><VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Requests}" BindableLayout.ItemTemplate="{StaticResource BarTemplate}" /></VerticalStackLayout></Border>
+                        <Border Padding="16"><VerticalStackLayout Spacing="10"><Label Text="JOBS" Style="{StaticResource SectionLabel}" /><VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Jobs}" BindableLayout.ItemTemplate="{StaticResource BarTemplate}" /></VerticalStackLayout></Border>
+                        <Border Padding="16"><VerticalStackLayout Spacing="10"><Label Text="QUOTATIONS" Style="{StaticResource SectionLabel}" /><VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Quotes}" BindableLayout.ItemTemplate="{StaticResource BarTemplate}" /></VerticalStackLayout></Border>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

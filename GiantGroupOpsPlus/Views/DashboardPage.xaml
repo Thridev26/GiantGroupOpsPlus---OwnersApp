@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             xmlns:models="clr-namespace:GiantGroupOpsPlus.Models"
+             xmlns:ctrl="clr-namespace:GiantGroupOpsPlus.Views.Controls"
+             x:Class="GiantGroupOpsPlus.Views.DashboardPage"
+             x:DataType="vm:DashboardViewModel"
+             Title="Giant Group Ops Plus">
+    <Grid RowDefinitions="Auto,*">
+        <ctrl:BannerView Grid.Row="0" />
+        <RefreshView Grid.Row="1" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <ScrollView>
+                <VerticalStackLayout Padding="16,12,16,28" Spacing="16">
+
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="{Binding Greeting}" Style="{StaticResource Title1}" />
+                        <Label Text="{Binding Today}" Style="{StaticResource Muted}" />
+                    </VerticalStackLayout>
+
+                    <Border IsVisible="{Binding HasError}" Padding="16" Stroke="{StaticResource Danger}">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}" />
+                            <Button Text="Try again" Command="{Binding RetryCommand}" Style="{StaticResource OutlineButton}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border IsVisible="{Binding HasQueue}" Padding="14,12" BackgroundColor="{StaticResource PrimaryLight}" Stroke="{StaticResource Primary}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenQueueCommand}" />
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Spacing="10">
+                            <Label Text="📷" FontSize="18" VerticalOptions="Center" />
+                            <Label Text="{Binding QueueText}" TextColor="{StaticResource PrimaryDark}" FontFamily="OpenSansSemibold" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <Label Text="REQUESTS" Style="{StaticResource SectionLabel}" />
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                        <Border Grid.Column="0" Padding="12">
+                            <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding ShowRequestsCommand}" CommandParameter="Pending" /></Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding Pending}" FontSize="28" FontFamily="OpenSansSemibold" TextColor="{StaticResource Warning}" />
+                                <Label Text="Pending" Style="{StaticResource Muted}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1" Padding="12">
+                            <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding ShowRequestsCommand}" CommandParameter="Evaluation Date Set" /></Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding ToEvaluate}" FontSize="28" FontFamily="OpenSansSemibold" TextColor="{StaticResource Info}" />
+                                <Label Text="To evaluate" Style="{StaticResource Muted}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="2" Padding="12">
+                            <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding ShowRequestsCommand}" CommandParameter="Site Evaluated" /></Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding Evaluated}" FontSize="28" FontFamily="OpenSansSemibold" TextColor="{StaticResource Primary}" />
+                                <Label Text="Evaluated" Style="{StaticResource Muted}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <Label Text="JOBS" Style="{StaticResource SectionLabel}" />
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                        <Border Grid.Column="0" Padding="12">
+                            <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding ShowJobsCommand}" CommandParameter="Not Started" /></Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding NotStarted}" FontSize="28" FontFamily="OpenSansSemibold" TextColor="{StaticResource Neutral}" />
+                                <Label Text="Not started" Style="{StaticResource Muted}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1" Padding="12">
+                            <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding ShowJobsCommand}" CommandParameter="In Progress" /></Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding InProgress}" FontSize="28" FontFamily="OpenSansSemibold" TextColor="{StaticResource Warning}" />
+                                <Label Text="In progress" Style="{StaticResource Muted}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="2" Padding="12">
+                            <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding ShowJobsCommand}" CommandParameter="Completed" /></Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding CompletedWeek}" FontSize="28" FontFamily="OpenSansSemibold" TextColor="{StaticResource Success}" />
+                                <Label Text="Done (7 days)" Style="{StaticResource Muted}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <VerticalStackLayout Spacing="8" IsVisible="{Binding HasOverview}">
+                        <Label Text="BUSINESS" Style="{StaticResource SectionLabel}" Margin="0,6,0,0" />
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="10">
+                            <Border Grid.Row="0" Grid.Column="0" Padding="12">
+                                <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding ShowReadyToQuoteCommand}" /></Border.GestureRecognizers>
+                                <VerticalStackLayout Spacing="2"><Label Text="{Binding ReadyToQuote}" FontSize="26" FontFamily="OpenSansSemibold" TextColor="{StaticResource Info}" /><Label Text="Ready to quote" Style="{StaticResource Muted}" /></VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Row="0" Grid.Column="1" Padding="12">
+                                <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenSectionCommand}" CommandParameter="quotes" /></Border.GestureRecognizers>
+                                <VerticalStackLayout Spacing="2"><Label Text="{Binding QuotesSent}" FontSize="26" FontFamily="OpenSansSemibold" TextColor="{StaticResource Warning}" /><Label Text="Quotes awaiting reply" Style="{StaticResource Muted}" /></VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="0" Padding="12">
+                                <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenSectionCommand}" CommandParameter="allocations" /></Border.GestureRecognizers>
+                                <VerticalStackLayout Spacing="2"><Label Text="{Binding JobsWithoutCrew}" FontSize="26" FontFamily="OpenSansSemibold" TextColor="{StaticResource Danger}" /><Label Text="Jobs without crew" Style="{StaticResource Muted}" /></VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="1" Padding="12">
+                                <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding OpenSectionCommand}" CommandParameter="payments" /></Border.GestureRecognizers>
+                                <VerticalStackLayout Spacing="2"><Label Text="{Binding OutstandingText}" FontSize="19" FontFamily="OpenSansSemibold" TextColor="{StaticResource Primary}" Margin="0,5,0,2" /><Label Text="Outstanding" Style="{StaticResource Muted}" /></VerticalStackLayout>
+                            </Border>
+                        </Grid>
+                        <Button Text="＋  New job request" Command="{Binding NewRequestCommand}" Style="{StaticResource OutlineButton}" />
+                    </VerticalStackLayout>
+
+                    <Label Text="UPCOMING SITE EVALUATIONS" Style="{StaticResource SectionLabel}" Margin="0,6,0,0" />
+                    <Label Text="No evaluations scheduled." Style="{StaticResource Muted}" IsVisible="{Binding HasUpcoming, Converter={StaticResource InvertedBool}}" />
+                    <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding Upcoming}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:JobRequestSummary">
+                                <Border Padding="14">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnRequestTapped" />
+                                    </Border.GestureRecognizers>
+                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="3">
+                                        <Label Grid.Row="0" Text="{Binding Title}" FontFamily="OpenSansSemibold" LineBreakMode="TailTruncation" />
+                                        <ctrl:StatusChip Grid.Row="0" Grid.Column="1" Status="{Binding Status}" />
+                                        <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding SiteAddress}" Style="{StaticResource Muted}" LineBreakMode="TailTruncation" />
+                                        <Label Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding EvaluationText}" TextColor="{StaticResource Info}" FontSize="12.5" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <Label Text="ACTIVE JOBS" Style="{StaticResource SectionLabel}" Margin="0,6,0,0" />
+                    <Label Text="No active jobs." Style="{StaticResource Muted}" IsVisible="{Binding HasActiveJobs, Converter={StaticResource InvertedBool}}" />
+                    <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding ActiveJobs}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:JobSummary">
+                                <Border Padding="14">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnJobTapped" />
+                                    </Border.GestureRecognizers>
+                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="3">
+                                        <Label Grid.Row="0" Text="{Binding Title}" FontFamily="OpenSansSemibold" LineBreakMode="TailTruncation" />
+                                        <ctrl:StatusChip Grid.Row="0" Grid.Column="1" Status="{Binding Status}" />
+                                        <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding SiteAddress}" Style="{StaticResource Muted}" LineBreakMode="TailTruncation" />
+                                        <Label Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding ItemsText}" FontSize="12.5" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

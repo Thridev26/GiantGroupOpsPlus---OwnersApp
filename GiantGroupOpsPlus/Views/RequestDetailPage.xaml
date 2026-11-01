@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:GiantGroupOpsPlus.ViewModels"
+             xmlns:models="clr-namespace:GiantGroupOpsPlus.Models"
+             xmlns:ctrl="clr-namespace:GiantGroupOpsPlus.Views.Controls"
+             x:Class="GiantGroupOpsPlus.Views.RequestDetailPage"
+             x:DataType="vm:RequestDetailViewModel"
+             Title="Job request">
+    <Grid RowDefinitions="Auto,*">
+        <ctrl:BannerView Grid.Row="0" />
+        <RefreshView Grid.Row="1" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <ScrollView>
+                <VerticalStackLayout Padding="16,12,16,32" Spacing="14">
+
+                    <VerticalStackLayout IsVisible="{Binding HasError}" Spacing="10">
+                        <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}" />
+                        <Button Text="Try again" Command="{Binding RetryCommand}" Style="{StaticResource OutlineButton}" />
+                    </VerticalStackLayout>
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+                    <VerticalStackLayout Spacing="14" IsVisible="{Binding HasDetail}">
+
+                        <!-- Summary -->
+                        <Border Padding="16">
+                            <VerticalStackLayout Spacing="8">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="{Binding Detail.JobRequestId, StringFormat='Request #{0}'}" Style="{StaticResource Title2}" />
+                                    <ctrl:StatusChip Grid.Column="1" Status="{Binding Detail.Status}" />
+                                </Grid>
+                                <Label Text="{Binding Detail.ClientName}" FontFamily="OpenSansSemibold" FontSize="16" />
+                                <Label Text="{Binding Detail.SiteAddress}" Style="{StaticResource Muted}" />
+                                <Label Text="{Binding Detail.ItemsText}" FontSize="13.5" />
+                                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="2" Margin="0,4,0,0">
+                                    <Label Grid.Row="0" Text="URGENCY" Style="{StaticResource SectionLabel}" FontSize="10.5" />
+                                    <Label Grid.Row="1" Text="{Binding Detail.Urgency}" />
+                                    <Label Grid.Column="1" Grid.Row="0" Text="EVALUATION DATE" Style="{StaticResource SectionLabel}" FontSize="10.5" />
+                                    <Label Grid.Column="1" Grid.Row="1" Text="{Binding Detail.EvaluationText}" />
+                                </Grid>
+                                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="0,6,0,0">
+                                    <Button Grid.Column="0" Text="📞 Call" Style="{StaticResource OutlineButton}" Command="{Binding CallCommand}" FontSize="13" Padding="4,0" />
+                                    <Button Grid.Column="1" Text="✉ Email" Style="{StaticResource OutlineButton}" Command="{Binding EmailCommand}" FontSize="13" Padding="4,0" />
+                                    <Button Grid.Column="2" Text="📍 Directions" Style="{StaticResource OutlineButton}" Command="{Binding DirectionsCommand}" FontSize="13" Padding="4,0" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Status -->
+                        <Border Padding="16">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="REQUEST STATUS" Style="{StaticResource SectionLabel}" />
+                                <Button Text="{Binding QuickActionText}" Command="{Binding MarkEvaluatedCommand}" IsVisible="{Binding HasQuickAction}"
+                                        IsEnabled="{Binding IsNotBusy}" BackgroundColor="{StaticResource Success}" />
+                                <Button Text="Change status" Command="{Binding ChangeStatusCommand}" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource OutlineButton}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Evaluation date + quote (full app) -->
+                        <Border Padding="16">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="SITE EVALUATION &amp; QUOTE" Style="{StaticResource SectionLabel}" />
+                                <Border Padding="12,0"><DatePicker Date="{Binding EvalDate}" /></Border>
+                                <Button Text="Set evaluation date" Command="{Binding SetEvaluationDateCommand}" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource OutlineButton}" />
+                                <Button Text="Quotation" Command="{Binding OpenQuoteCommand}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Photos -->
+                        <Border Padding="16">
+                            <VerticalStackLayout Spacing="10">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="SITE PHOTOS" Style="{StaticResource SectionLabel}" VerticalOptions="Center" />
+                                    <Label Grid.Column="1" Text="{Binding Detail.PhotoText}" Style="{StaticResource Muted}" />
+                                </Grid>
+                                <Label Text="{Binding QueuedText}" IsVisible="{Binding HasQueued}" TextColor="{StaticResource Info}" FontSize="13" />
+                                <Button Text="📷  Take or add photos" Command="{Binding AddPhotoCommand}" />
+                                <Button Text="View all photos" Command="{Binding ViewPhotosCommand}" Style="{StaticResource OutlineButton}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Site measurements -->
+                        <Border Padding="16" IsVisible="{Binding HasItems}">
+                            <VerticalStackLayout Spacing="12">
+                                <Label Text="SITE MEASUREMENTS" Style="{StaticResource SectionLabel}" />
+                                <VerticalStackLayout Spacing="16" BindableLayout.ItemsSource="{Binding Items}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:ItemEditor">
+                                            <VerticalStackLayout Spacing="8">
+                                                <Label Text="{Binding Title}" Style="{StaticResource Title2}" />
+                                                <Label Text="No measurement fields are set up for this service." Style="{StaticResource Muted}"
+                                                       IsVisible="{Binding HasFields, Converter={StaticResource InvertedBool}}" />
+                                                <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding Fields}">
+                                                    <BindableLayout.ItemTemplate>
+                                                        <DataTemplate x:DataType="vm:FieldEditor">
+                                                            <VerticalStackLayout Spacing="2">
+                                                                <Label Text="{Binding Name}" FontSize="13" FontFamily="OpenSansSemibold" />
+                                                                <Border Padding="12,0" IsVisible="{Binding IsText}">
+                                                                    <Entry Text="{Binding Value}" Placeholder="{Binding Hint}" Keyboard="{Binding Keyboard}" MaxLength="50" />
+                                                                </Border>
+                                                                <Border Padding="12,0" IsVisible="{Binding IsBoolean}">
+                                                                    <Picker ItemsSource="{Binding YesNo}" SelectedItem="{Binding Value}" Title="Yes or No" />
+                                                                </Border>
+                                                            </VerticalStackLayout>
+                                                        </DataTemplate>
+                                                    </BindableLayout.ItemTemplate>
+                                                </VerticalStackLayout>
+                                            </VerticalStackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                                <Button Text="Save measurements" Command="{Binding SaveDetailsCommand}" IsEnabled="{Binding IsNotBusy}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Linked jobs -->
+                        <Border Padding="16" IsVisible="{Binding HasJobs}">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="JOBS FOR THIS REQUEST" Style="{StaticResource SectionLabel}" />
+                                <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Jobs}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="models:JobRef">
+                                            <Button Text="{Binding Text}" Style="{StaticResource OutlineButton}" Clicked="OnJobClicked" />
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+    </Grid>
+</ContentPage>
