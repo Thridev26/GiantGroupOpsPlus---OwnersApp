@@ -1,4 +1,4 @@
-# Giant Group Ops Plus (test build)
+# Giant Group Ops Plus
 
 A separate, full-feature version of the Giant Group field app. The original `GiantGroupMobileApp` is untouched.
 It installs **alongside** the original (different app id: `com.thegiantgroup.operationsplus`) and uses the **same server**
